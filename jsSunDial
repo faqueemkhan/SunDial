@@ -1,0 +1,133 @@
+<script>
+        // Fetching current temperature data using WeatherAPI
+        async function getTemperature(city) {
+            const apiKey = 'ad4876ff88c24331bb703800251603';  // Replace with your API key
+            const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no`);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch temperature data');
+            }
+            
+            const data = await response.json();
+
+            // Get the current temperature (not max or min)
+            return data.current.temp_c;  // Temperature in Celsius
+        }
+
+        // Get current date and time
+        function getCurrentDateTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString();
+            const date = now.toLocaleDateString();
+            const day = now.toLocaleString('en-us', { weekday: 'long' });
+            const month = now.toLocaleString('en-us', { month: 'long' });
+            const year = now.getFullYear();
+
+            return { time, date, day, month, year, currentDate: now };
+        }
+
+        // Handle displaying the content based on the URL hash
+        function displayContent() {
+            const container = document.getElementById('main-container');
+            const hash = window.location.hash;
+
+            if (hash === '#temperature') {
+                container.innerHTML = ` 
+                    <h1>Current Temperature</h1>
+                    <input type="text" id="city" placeholder="Enter city name" />
+                    <button onclick="searchTemperature()">Search</button>
+                    <div id="temperature">Loading...</div>
+                    <button onclick="goBack()">Back</button>
+                    <div class="error" id="error-message"></div>
+                `;
+            } else if (hash === '#time') {
+                container.innerHTML = ` 
+                    <h1>Current Time</h1>
+                    <div id="time">Loading...</div>
+                    <button onclick="goBack()">Back</button>
+                `;
+                setInterval(() => {
+                    const time = new Date().toLocaleTimeString();
+                    document.getElementById('time').textContent = time;
+                }, 1000);
+            } else if (hash === '#day') {
+                const { currentDate } = getCurrentDateTime();
+                container.innerHTML = ` 
+                    <h1>Today is</h1>
+                    <div id="day">Loading...</div>
+                    <button onclick="goBack()">Back</button>
+                    <button class="arrow arrow-left" onclick="previousDay()">&#8592;</button>
+                    <button class="arrow arrow-right" onclick="nextDay()">&#8594;</button>
+                    <button onclick="currentDay()">Current Day</button>
+                `;
+                document.getElementById('day').textContent = currentDate.toLocaleString('en-us', { weekday: 'long' });
+            } else if (hash === '#month') {
+                const { currentDate } = getCurrentDateTime();
+                container.innerHTML = ` 
+                    <h1>Current Month</h1>
+                    <div id="month">Loading...</div>
+                    <button onclick="goBack()">Back</button>
+                    <button class="arrow arrow-left" onclick="previousMonth()">&#8592;</button>
+                    <button class="arrow arrow-right" onclick="nextMonth()">&#8594;</button>
+                    <button onclick="currentMonth()">Current Month</button>
+                `;
+                document.getElementById('month').textContent = currentDate.toLocaleString('en-us', { month: 'long' });
+            } else if (hash === '#year') {
+                const { currentDate } = getCurrentDateTime();
+                container.innerHTML = ` 
+                    <h1>Current Year</h1>
+                    <div id="year">Loading...</div>
+                    <button onclick="goBack()">Back</button>
+                    <button class="arrow arrow-left" onclick="previousYear()">&#8592;</button>
+                    <button class="arrow arrow-right" onclick="nextYear()">&#8594;</button>
+                    <button onclick="currentYear()">Current Year</button>
+                `;
+                document.getElementById('year').textContent = currentDate.getFullYear();
+            } else {
+                container.innerHTML = ` 
+                    <h1>Welcome to the Weather & Time App</h1>
+                    <div class="buttons">
+                        <button onclick="window.location.hash = '#temperature'">Temperature</button>
+                        <button onclick="window.location.hash = '#time'">Time</button>
+                        <button onclick="window.location.hash = '#day'">Day</button>
+                        <button onclick="window.location.hash = '#month'">Month</button>
+                        <button onclick="window.location.hash = '#year'">Year</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Go back to the main page
+        function goBack() {
+            window.location.hash = '';  // This will clear the hash and return to the main page
+        }
+
+        // Search for temperature based on city input
+        function searchTemperature() {
+            const city = document.getElementById('city').value;
+            if (city.trim() === '') {
+                document.getElementById('error-message').textContent = 'Please enter a valid city name.';
+                return;
+            }
+
+            document.getElementById('error-message').textContent = '';
+            document.getElementById('temperature').textContent = 'Loading...';
+
+            getTemperature(city)
+                .then(temp => {
+                    document.getElementById('temperature').textContent = `${temp} °C`;
+                    document.getElementById('error-message').textContent = '';
+                })
+                .catch(error => {
+                    document.getElementById('temperature').textContent = 'Failed to load temperature.';
+                    document.getElementById('error-message').textContent = 'Could not find the city. Please try again.';
+                    console.error(error);
+                });
+        }
+
+        // Call displayContent whenever the hash changes
+        window.addEventListener('hashchange', displayContent);
+
+        // Call displayContent initially to show the default page
+        displayContent();
+    </script>
