@@ -1,0 +1,10 @@
+ <div class="container" id="main-container">
+        <h1>Welcome to the SunDial</h1>
+        <div class="buttons">
+            <button onclick="window.location.hash = '#temperature'">Temperature</button>
+            <button onclick="window.location.hash = '#time'">Time</button>
+            <button onclick="window.location.hash = '#day'">Day</button>
+            <button onclick="window.location.hash = '#month'">Month</button>
+            <button onclick="window.location.hash = '#year'">Year</button>
+        </div>
+    </div>
