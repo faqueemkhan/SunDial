@@ -1,0 +1,205 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather & Time App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Resetting some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif; /* More modern font */
+            background-image: linear-gradient(135deg, #604d74, #a488ac); /* Vibrant gradient background */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            color: #f3eeee;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: background 0.5s ease;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px); /* Frosted glass effect */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for depth */
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 600; /* Semi-bold for a modern look */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #0e1214;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #522745, #d3a5d1); /* Gradient buttons */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .buttons button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #temperature, #time, #day, #month, #year {
+            font-size: 2rem;
+            margin: 20px 0;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            animation: slideIn 1s ease-in-out;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            font-size: 1rem;
+            width: 80%;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            color: #522745;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #522745;
+            box-shadow: 0 0 10px rgba(197, 17, 203, 0.5);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #d4b5cb#d3a5d1); /* Gradient buttons */
+            color: rgb(85, 38, 81);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .buttons button:last-child {
+    grid-column: 1 / -1; /* Span across all columns */
+    justify-self: center; /* Center the button horizontally */
+    width: 50%; /* Adjust width for better appearance */
+}
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .error {
+            color: #ff6b6b; /* Softer error color */
+            font-size: 1rem;
+            margin-top: 10px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        /* Sliding Arrow Styles */
+        .arrow {
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 10px;
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            position: absolute;
+        }
+
+        .arrow:hover {
+            transform: scale(1.2);
+            opacity: 0.8;
+        }
+
+        /* Left and Right arrow positions */
+        .arrow-left {
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+        }
+
+        .arrow-right {
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .buttons button {
+                font-size: 1rem;
+                padding: 12px 25px;
+            }
+
+            input[type="text"] {
+                width: 90%;
+            }
+
+            .arrow {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
